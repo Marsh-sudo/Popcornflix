@@ -1,0 +1,21 @@
+{%extends "base.html"%}
+{% load embed_video_tags %}
+
+{%block content%}
+<body style="background-color: black;">
+    <div class="container" style="background-color: rgb(29, 27, 27);">
+    <div class="row">
+        <div class="col-md-6">
+            <img class="row__poster" src="https://image.tmdb.org/t/p/original{{movie.poster_path}}"
+                     alt="{{movie.original_title}}"/>
+        </div>
+        <p>{{overview}}</p>
+        <div class="container text-center d-flex justify-content-center align-items-center min-vh-100">
+            {% video url 'large' %}
+        </div>
+    </div>
+</div>
+</body>
+
+
+{%endblock%}
