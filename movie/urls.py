@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 
+
 urlpatterns = [
     path('',views.home,name="home"),
     path('register',views.register_request,name="register"),
@@ -12,8 +13,9 @@ urlpatterns = [
     path("upcoming",views.Upcoming,name="upcoming"),
     path("popular",views.Popular,name="popular"),
     path("trending",views.Trending,name="trending"),
-    
-    # path("password_reset", views.password_reset_request, name="password_reset"),
+    path("password_change_view",views.password_change_view,name="password_change_view"),
+    path("password_confirm",views.password_confrim,name="password_confirm"),
+    path("password_reset", views.password_reset_request, name="password_reset"),
 ]
 
 if settings.DEBUG:

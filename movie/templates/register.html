@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{%block title%}
+Register
+{%endblock%}
+
+<!-- {%block super%}
+<link rel="stylesheet" href="{%static '../../../../static/css/index.css">
+{%endblock%} -->
+
+
+
+
+<body style="background-image: url(../../static/Premium\ Photo\ _\ Cinema\ concept\ with\ clapperboard\ and\ popcorn.jpeg);">
+
+
+{%load crispy_forms_tags%}
+
+{%block content%}
+<!--Register--> 
+<div class="container py-5">
+	<h1 class="text-center">Register</h1>
+	<form method="POST" class="text-center">
+		{% csrf_token %}
+		{{ register_form|crispy }}                    
+		<button class="btn btn-primary" type="submit">Register</button>
+	</form>
+	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+</div>
+
+{% endblock %}
+</body>
+</html>
