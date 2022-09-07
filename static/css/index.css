@@ -1,0 +1,8 @@
+.poster {
+  background-image: url('images/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  object-fit: contain;
+  height: 448px;
+}
