@@ -192,18 +192,5 @@ def Trending(request):
 	return render(request,"trending.html",{"trending":trending["results"]})
 
 
-def search_movie(request):
-	query = request.GET.get('s')
-	if query:
-		results = requests.get(f"https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>")
-		
 
 
-def wines_pairing(request):
-    query = request.GET.get('w')
-
-    if query:
-        results = requests.get(f"https://api.spoonacular.com/food/wine/recommendation?wine={query}&number=10&apiKey={apiKey}")
-        data = results.json()
-
-    return render (request,'wineSearch.html',{"data":data['recommendedWines']})
