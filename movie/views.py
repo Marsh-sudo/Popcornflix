@@ -16,42 +16,39 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.contrib.auth.forms import AuthenticationForm,SetPasswordForm
-from .forms import RegisterUserForm,LoginUserForm,PasswordChangingForm
+from .forms import SignUpForm,UpdateProfileForm,UpdateUserForm,PasswordChangingForm
 from .secrets import get_genres,get_movie,get_Nowplaying,get_trending,get_Toprated,get_video,get_popular,get_Upcoming
 
 
 # Create your views here.
 def register_request(request):
 	if request.method == "POST":
-		form = RegisterUserForm(request.POST)
+		form = SignUpForm(request.POST)
 		if form.is_valid():
 			user = form.save()
 			login(request, user)
 			messages.success(request, "Registration successful." )
 			return redirect("login")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = RegisterUserForm()
+	form = SignUpForm()
 	return render (request=request, template_name="register.html", context={"register_form":form})
 
 
 def login_request(request):
 	if request.method == "POST":
-		form = AuthenticationForm(request, data=request.POST)
-		if form.is_valid():
-			username = form.cleaned_data.get('username')
-			password = form.cleaned_data.get('password')
-			user = authenticate(username=username, password=password)
-			if user is not None:
-				login(request, user)
-				messages.info(request, f"You are now logged in as {username}.")
-				print(user)
-				return redirect("home")
-			else:
-				messages.error(request,"Invalid username or password.")
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = authenticate(request,username=username,password=password)
+		if user is not None:
+			login(request,user)
+			print(user)
+			return redirect("home")
 		else:
-			messages.error(request,"Invalid username or password.")
-	form = AuthenticationForm()
-	return render(request=request, template_name="login.html", context={"login_form":form})
+			messages.success(request,"Sorry there was an error login In!! Try again...")
+			return redirect("home")
+
+	else:
+		return render(request,"login.html",{})
 
 @login_required(login_url='password_change_view')
 def password_change_view(request):
@@ -192,5 +189,21 @@ def Trending(request):
 	return render(request,"trending.html",{"trending":trending["results"]})
 
 
+@login_required
+def profile_update(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='profile')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    return render(request, 'profile-update.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
