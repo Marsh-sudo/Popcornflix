@@ -1,7 +1,12 @@
 from urllib import response
+import os
+from dotenv import load_dotenv
+from pathlib import Path
 import requests
 
-API_KEY = "d8746dddc86e43824b569e623e4a4425"
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
 
 def get_movie():
     response = requests.get(f"https://api.themoviedb.org/3/movie/550?api_key={API_KEY}")
