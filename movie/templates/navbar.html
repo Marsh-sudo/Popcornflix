@@ -1,108 +1,99 @@
-<header>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-}
-.four{
-  margin-top: 20px;
-  margin-right: 10rem;
-  text-decoration: none;
-}
-header {
-  padding: 20px 0;
-  background: repeating-linear-gradient(45deg, #f0f2ed, #f0f2ed 20px, #f8f4eb 20px, #f8f4eb 40px);
-  box-shadow: 0 4px 6px rgba(0,0,0,.2);  
-}
-.container {
-  padding: 0 20px;
-  max-width: 960px;
-  margin: 0 auto;
-}
-.logo-box {
-  float: left;
-  margin-right: 20px;
-}
-.logo-box a {
-  outline: none;
-  display: block;
-}
-.logo-box img {display: block;}
-nav {
-  overflow: hidden;
-}
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  float: right;
-}
-nav li {
-  display: inline-block;
-  margin-left: 25px;
-  height: 70px;
-  line-height: 70px;
-  transition: .5s linear;
-}
-nav a {
-  text-decoration: none;
-  display: block;
-  position: relative;
-  color: #868686;
-  text-transform: uppercase;
-}
-nav a:after {
-  content: "";
-  width: 0;
-  height: 2px;
-  position: absolute;
-  left: 0;
-  bottom: 15px;
-  background: #868686;
-  transition: width .5s linear;  
-}
-nav a:hover:after {width: 100%;}
+<!-- Navbar -->
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-white">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+    <!-- Toggle button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-mdb-toggle="collapse"
+      data-mdb-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
 
-@media screen and (max-width: 660px) {
-  header {text-align: center;}
-  .logo-box {
-    float: none;
-    display: inline-block;
-    margin: 0 0 16px 0;
-  }
-  ul {float: none;}
-  nav li:first-of-type {margin-left: 0;}
-}
-@media screen and (max-width: 550px) {
-nav {overflow: visible;}
-nav li {
-  display: block;
-  margin: 0;
-  height: 40px;
-  line-height: 40px;
-}
-nav li:hover {background: rgba(0,0,0,.1);}
-nav a:after {content: none;}
-
-} 
-
-    </style>
-    <div class="container">
-      <div class="logo-box">
-        <a href="/">
-         <i class="fa-solid fa-camera-movie"></i>
-          <h2 class="four">POPCORNFLIX</h1>
-        </a>
-      </div>
-      <nav>
-      <ul>
-        <li><a href="{%url 'home'%}">Home</a></li>
-        <li><a href="{%url 'popular'%}">Popular</a></li>
-        <li><a href="{%url 'upcoming'%}">Upcoming</a></li>
-        <li><a href="{%url 'trending'%}">Trending</a></li>
-        <li><a href="{%url 'logout'%}">Logout</a></li>
-     </ul>
-    </nav>
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Navbar brand -->
+      <a class="navbar-brand mt-2 mt-lg-0" href="#">
+        <img
+          src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+          height="15"
+          alt="MDB Logo"
+          loading="lazy"
+        />
+      </a>
+      <!-- Left links -->
+      
+      <!-- Left links -->
     </div>
-  </header>
+    <!-- Collapsible wrapper -->
+    <!-- Right elements -->
+    <div class="d-flex align-items-center">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'popular' %}">Popular</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'trending' %}">Trending</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'upcoming' %}">Upcoming</a>
+        </li>
+      </ul>
+      <!-- Icon -->
+      <!-- <a class="link-secondary me-3" href="#">
+        <i class="fas fa-shopping-cart"></i>
+      </a> -->
+
+      <!-- Notifications -->
+      <!-- <div class="dropdown">
+        <a
+          class="link-secondary me-3 dropdown-toggle hidden-arrow"
+          href="#"
+          id="navbarDropdownMenuLink"
+          role="button"
+          data-mdb-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="fas fa-bell"></i>
+          <span class="badge rounded-pill badge-notification bg-danger">1</span>
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="navbarDropdownMenuLink"
+        >
+          <li>
+            <a class="dropdown-item" href="#">Some news</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#">Another news</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </li>
+        </ul>
+      </div> -->
+      <!-- Avatar -->
+      <ul class="navbar-nav" style="margin-right: 40px;">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            My Profile
+          </a>
+          <ul class="dropdown-menu pull-left" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{%url 'profile' %}">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{%url 'logout' %}">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+   
+    </div>
+    <!-- Right elements -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->

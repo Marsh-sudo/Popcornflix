@@ -1,5 +1,5 @@
 {%extends 'base.html'%}
-
+{%load static%}
 {%block title%}
 Homepage
 {%endblock%}
@@ -14,6 +14,9 @@ Homepage
     height: 20rem;
 
 }
+.poster1{
+    height: 1rem;
+}
 /* .poster__contents{
     margin-left: 30px;
     padding-top: 100px;
@@ -24,6 +27,7 @@ Homepage
     font-weight: 150px;
     margin-top: 30rem;
     margin-left: 2rem;
+    color: #fff;
 }
 .poster_description{
   width: 45rem;
@@ -123,9 +127,28 @@ h1{
 }
 </style>
 <body style="background-color: rgb(27, 26, 26);">
-    
+<div class="poster1" style="background-image: url('https://image.tmdb.org/t/p/original{{ poster.backdrop_path }}');">
+    <div class="poster__contents">
+        <p style="color: transparent;">hahaha</p>
+        <h1 class="poster_title">{{poster.title}}</h1>
+        <a href="/play/ {{poster.id}}">
+            <button class="banner__button btn btn-danger" type="button" style="margin-left: 2rem;">
+                <i class="fa-solid fa-play"></i>
+                    Play Trailer
+            </button>
+        </a>
+        <h4 style="margin-left: 1rem;">Overview</h4>
+        <h5 style="margin-left: 1rem; margin-bottom: 1rem;">{{poster.overview}}</h5>
+        <!-- <h1 class="poster_description">
+            <h4>Overview</h4>
+            {{poster.overview}}
+        </h1> -->
+    </div>
+    <div class="poster-fadeBottom"></div>
 
-<header class="poster1" style="background-image: url('https://image.tmdb.org/t/p/original{{ poster.backdrop_path }}');">
+</div>
+
+<!-- <header class="poster1" style="background-image: url('https://image.tmdb.org/t/p/original{{ poster.backdrop_path }}');">
     <div class="poster__contents">
         <h1 class="poster_title">{{poster.title}}</h1>
         <a href="/play/ {{poster.id}}">
@@ -140,10 +163,11 @@ h1{
             <h4>Overview</h4>
             {{poster.overview}}
         </h1> -->
-    </div>
+    <!-- </div>
     <div class="poster-fadeBottom"></div>
 
-</header>
+</header> -->
+
 
 <section class="movies" style="background-image: url(./pop.jpeg);">
     <div>
@@ -218,7 +242,7 @@ h1{
                     <img class="row__poster" src="https://image.tmdb.org/t/p/original{{movie.poster_path}}"
                      alt="{{movie.original_title}}"/>
                 </a>
-                <small class="circle" >{{movie.vote_average}}</small>
+                <small>{{movie.vote_average}}</small>
                 <div class="details position-absolute" id="details">
                     <button type="button" class="btn text-light" data-bs-toggle="modal"
                             data-bs-target="#exampleModal{{ movie.id }}">
