@@ -12,13 +12,13 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
-from django.utils.http import urlsafe_base64_encode
+from django.views.generic import DetailView,ListView
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.contrib.auth.forms import AuthenticationForm,SetPasswordForm
 from .forms import SignUpForm,UpdateProfileForm,UpdateUserForm,PasswordChangingForm
 from .secrets import get_genres,get_movie,get_Nowplaying,get_trending,get_Toprated,get_video,get_popular,get_Upcoming
-
+from .models import Profile,Users
 
 # Create your views here.
 def register_request(request):
@@ -50,60 +50,8 @@ def login_request(request):
 	else:
 		return render(request,"login.html",{})
 
-@login_required(login_url='password_change_view')
-def password_change_view(request):
-	if request.method == "POST":
-		change_form = PasswordChangingForm(user=request.user,data=request.POST)
-		if change_form.is_valid():
-			change_form.save
-			# password1 = change_form.cleaned_data["password1"]
-			# password2 = change_form.cleaned_data["password2"]
-			# if password1 == password2:
-			# 	change_form.save()
-			# user = change_form.save()
-			# password_change(request,user)
-			messages.success(request,"You have successfully changed your password!!")
-			return redirect("password_confirm")
-		messages.error(request,"Unsuccessful change")
-	change_form = PasswordChangingForm(user=request.user)
-	return render(request,"password/password_reset_confirm.html",{"change_form":change_form})
-
-def password_confrim(request):
-	return render(request,"password/password_reset_complete.html")
-
-			   
-
-def password_reset_request(request):
-	if request.method == "POST":
-		password_reset_form = PasswordResetForm(request.POST)
-		if password_reset_form.is_valid():
-			data = password_reset_form.cleaned_data['email']
-			associated_users = User.objects.filter(Q(email=data))
-			if associated_users.exists():
-				for user in associated_users:
-					subject = "Password Reset Request"
-					email_template_name = "password/password_reset_email.txt"
-					c = {
-						"email":user.email,
-						"domain":'127.0.0.1:8050',
-						"site_name":"Popcornflix",
-						"uid":user,
-						"token":default_token_generator.make_token(user),
-                        "protocol":"http",
-					}
-					email = render_to_string(email_template_name,c)
-					try:
-						send_mail(subject,email,'admin@example.com',[user.email],fail_silently=False)
-						# return redirect("login")
-					except BadHeaderError:
-						return HttpResponse('Invalid header found.')
-					return redirect("password_change_view")
-
-	password_reset_form = PasswordResetForm()
-	return render(request,"password/password_reset.html",{"password_reset_form":password_reset_form})
 
 
-@login_required(login_url='login')
 def home(request):
 	#logic for types of movies
 	movie = get_trending()
@@ -176,7 +124,7 @@ def logout_request(request):
 @login_required(login_url='login')
 def Upcoming(request):
 	upcoming = get_Upcoming()
-	return render(request,"rate.html",{"upcoming":upcoming['results']})
+	return render(request,"upcoming.html",{"upcoming":upcoming['results']})
 
 @login_required(login_url='login')
 def Popular(request):
@@ -189,7 +137,7 @@ def Trending(request):
 	return render(request,"trending.html",{"trending":trending["results"]})
 
 
-@login_required
+
 def profile_update(request):
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=request.user)
@@ -207,3 +155,6 @@ def profile_update(request):
     return render(request, 'profile-update.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
+class ProfileView(ListView):
+	model = Profile
+	template_name = "profile.html"
