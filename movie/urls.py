@@ -2,20 +2,19 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
-
+from movie.views import ProfileView
 
 urlpatterns = [
     path('',views.home,name="home"),
-    path('register',views.register_request,name="register"),
+    path("UserRegistration",views.register_request,name="UserRegistration"),
     path('login',views.login_request,name="login"),
     path("logout", views.logout_request, name= "logout"),
     path("play/<movie_id>",views.show_video,name="play"),
     path("upcoming",views.Upcoming,name="upcoming"),
     path("popular",views.Popular,name="popular"),
     path("trending",views.Trending,name="trending"),
-    path("password_change_view",views.password_change_view,name="password_change_view"),
-    path("password_confirm",views.password_confrim,name="password_confirm"),
-    path("password_reset", views.password_reset_request, name="password_reset"),
+    path("profile/",ProfileView.as_view(),name="profile"),
+    path("Updateprofile",views.profile_update,name="Updateprofile")
 ]
 
 if settings.DEBUG:
