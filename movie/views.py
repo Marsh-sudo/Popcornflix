@@ -27,6 +27,7 @@ def register_request(request):
 		if form.is_valid():
 			user = form.save()
 			login(request, user)
+			print(user)
 			messages.success(request, "Registration successful." )
 			return redirect("login")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
@@ -39,19 +40,22 @@ def login_request(request):
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		user = authenticate(request,username=username,password=password)
-		if user is not None:
+		print(username)
+		print(password)
+		print(dir(user))
+		if user:
 			login(request,user)
 			print(user)
 			return redirect("home")
 		else:
-			messages.success(request,"Sorry there was an error login In!! Try again...")
-			return redirect("home")
+			messages.success(request,"Sorry there was an error logging In!! Try again...")
+			return redirect("login")
 
 	else:
 		return render(request,"login.html",{})
 
 
-
+@login_required(login_url='login')
 def home(request):
 	#logic for types of movies
 	movie = get_trending()
@@ -131,7 +135,7 @@ def Popular(request):
 	popular = get_popular()
 	return render(request,"popular.html",{"popularr":popular["results"]})
 
-@login_required(login_url='login')
+@login_required
 def Trending(request):
 	trending = get_trending()
 	return render(request,"trending.html",{"trending":trending["results"]})
