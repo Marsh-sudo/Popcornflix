@@ -77,6 +77,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -114,6 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+
+LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 
 TIME_ZONE = 'UTC'
