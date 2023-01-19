@@ -8,51 +8,84 @@ from django.contrib import messages
 from django.core.mail import send_mail,BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.views import PasswordChangeView
-from django.contrib.auth.models import User
-from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
+from django.contrib.auth.views import PasswordChangeView,LoginView
 from django.views.generic import DetailView,ListView
-from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from django.contrib.auth.forms import AuthenticationForm,SetPasswordForm
-from .forms import SignUpForm,UpdateProfileForm,UpdateUserForm,PasswordChangingForm
+from django.views import View
+from .forms import UpdateProfileForm,UpdateUserForm,PasswordChangingForm,RegisterForm,LoginForm
 from .secrets import get_genres,get_movie,get_Nowplaying,get_trending,get_Toprated,get_video,get_popular,get_Upcoming
 from .models import Profile,Users
 
 # Create your views here.
-def register_request(request):
-	if request.method == "POST":
-		form = SignUpForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			login(request, user)
-			print(user)
-			messages.success(request, "Registration successful." )
-			return redirect("login")
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = SignUpForm()
-	return render (request=request, template_name="register.html", context={"register_form":form})
+class RegisterView(View):
+    form_class = RegisterForm
+    initial = {'key': 'value'}
+    template_name = 'register.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}')
+
+            return redirect(to='login')
+
+        return render(request, self.template_name, {'form': form})
+
+class CustomLoginView(LoginView):
+    form_class = LoginForm
+
+    def form_valid(self, form):
+        remember_me = form.cleaned_data.get('remember_me')
+
+        if not remember_me:
+            # set session expiry to 0 seconds. So it will automatically close the session after the browser is closed.
+            self.request.session.set_expiry(0)
+
+            # Set session as modified to force data updates/cookie to be saved.
+            self.request.session.modified = True
+
+        # else browser session will be as long as the session cookie time "SESSION_COOKIE_AGE" defined in settings.py
+        return super(CustomLoginView, self).form_valid(form)
+
+# def register_request(request):
+# 	if request.method == "POST":
+# 		form = SignUpForm(request.POST)
+# 		if form.is_valid():
+# 			user = form.save()
+# 			login(request, user)
+# 			print(user)
+# 			messages.success(request, "Registration successful." )
+# 			return redirect("login")
+# 		messages.error(request, "Unsuccessful registration. Invalid information.")
+# 	form = SignUpForm()
+# 	return render (request=request, template_name="register.html", context={"register_form":form})
 
 
-def login_request(request):
-	if request.method == "POST":
-		username = request.POST.get('username')
-		password = request.POST.get('password')
-		user = authenticate(request,username=username,password=password)
-		print(username)
-		print(password)
-		print(dir(user))
-		if user:
-			login(request,user)
-			print(user)
-			return redirect("home")
-		else:
-			messages.success(request,"Sorry there was an error logging In!! Try again...")
-			return redirect("login")
+# def login_request(request):
+# 	if request.method == "POST":
+# 		username = request.POST.get('username')
+# 		password = request.POST.get('password')
+# 		user = authenticate(request,username=username,password=password)
+# 		print(username)
+# 		print(password)
+# 		if user:
+# 			login(request,user)
+# 			print(user)
+# 			return redirect("home")
+# 		else:
+# 			messages.success(request,"Sorry there was an error logging In!! Try again...")
+# 			return redirect("login")
 
-	else:
-		return render(request,"login.html",{})
+# 	else:
+# 		return render(request,"login.html",{})
 
 
 @login_required(login_url='login')
