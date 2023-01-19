@@ -108,8 +108,3 @@ class PasswordChangingForm(PasswordChangeForm):
         fields = ['new_password1','new_password2']
 
 
-# class LoginUserForm(UserCreationForm):
-#     class Meta:
-#         model = User
-#         fields = ['username,password']
-#         widgets = [passwordInputWidget]
