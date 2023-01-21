@@ -1,6 +1,9 @@
+from xml.dom import ValidationErr
 from django import forms
-from .models import Users,Profile
+from .models import Profile
+from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm,AuthenticationForm
+from django.contrib.auth.models import User
 
 
 passwordInputWidget = {'password':forms.PasswordInput()}
@@ -42,7 +45,7 @@ class RegisterForm(UserCreationForm):
                                                                   }))
 
     class Meta:
-        model = Users
+        model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 class LoginForm(AuthenticationForm):
@@ -62,23 +65,28 @@ class LoginForm(AuthenticationForm):
     remember_me = forms.BooleanField(required=False)
 
     class Meta:
-        model = Users
+        model = User
         fields = ['username', 'password', 'remember_me']
-# class SignUpForm(UserCreationForm):
+
     
-#     class Meta:
-#         model = Users
-#         fields = ('username','email')
-#         widgets = [passwordInputWidget]
 
-#         USERNAME_FIELD = 'username'
+    
+class SignUpForm(UserCreationForm):
+    
+    class Meta:
+        model = User
+        fields = ('username','email')
+        widgets = [passwordInputWidget]
 
-#     def save(self, commit=True):
-#         user = super(SignUpForm,self).save(commit=False)
-#         user.username = self.cleaned_data['username']
-#         if commit:
-#             user.save()
-#         return user
+        USERNAME_FIELD = 'username'
+
+
+    def save(self, commit=True):
+        user = super(SignUpForm,self).save(commit=False)
+        user.username = self.cleaned_data['username']
+        if commit:
+            user.save()
+        return user
 
 class UpdateUserForm(forms.ModelForm):
     username = forms.CharField(max_length=100,
@@ -88,7 +96,7 @@ class UpdateUserForm(forms.ModelForm):
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = Users
+        model = User
         fields = ['username', 'email']
 
 
@@ -104,7 +112,7 @@ class PasswordChangingForm(PasswordChangeForm):
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','type':'password'}))
     new_password2 = forms.CharField(max_length=100,widget=forms.PasswordInput(attrs={'class':'form-control','type':'password'}))
     class Meta:
-        model = Users
+        model = User
         fields = ['new_password1','new_password2']
 
 
