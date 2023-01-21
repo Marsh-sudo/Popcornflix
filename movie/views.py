@@ -8,13 +8,14 @@ from django.contrib import messages
 from django.core.mail import send_mail,BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.views import PasswordChangeView,LoginView
+from django.contrib.auth.views import PasswordChangeView,LoginView,PasswordResetView
 from django.views.generic import DetailView,ListView
-from django.utils.encoding import force_bytes
+from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views import View
-from .forms import UpdateProfileForm,UpdateUserForm,PasswordChangingForm,RegisterForm,LoginForm
+from .forms import UpdateProfileForm,UpdateUserForm,PasswordChangingForm,LoginForm,RegisterForm,SignUpForm
 from .secrets import get_genres,get_movie,get_Nowplaying,get_trending,get_Toprated,get_video,get_popular,get_Upcoming
-from .models import Profile,Users
+from .models import Profile
 
 # Create your views here.
 class RegisterView(View):
@@ -60,6 +61,7 @@ class CustomLoginView(LoginView):
 # 		form = SignUpForm(request.POST)
 # 		if form.is_valid():
 # 			user = form.save()
+# 			user.save()
 # 			login(request, user)
 # 			print(user)
 # 			messages.success(request, "Registration successful." )
@@ -76,16 +78,18 @@ class CustomLoginView(LoginView):
 # 		user = authenticate(request,username=username,password=password)
 # 		print(username)
 # 		print(password)
-# 		if user:
+# 		if user and user.is_active==False:
 # 			login(request,user)
 # 			print(user)
 # 			return redirect("home")
 # 		else:
-# 			messages.success(request,"Sorry there was an error logging In!! Try again...")
+# 			messages.success(request,"Sorry there was an error login In!! Try again...")
 # 			return redirect("login")
 
 # 	else:
 # 		return render(request,"login.html",{})
+   
+	
 
 
 @login_required(login_url='login')
@@ -195,3 +199,13 @@ def profile_update(request):
 class ProfileView(ListView):
 	model = Profile
 	template_name = "profile.html"
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'password/password_reset.html'
+    email_template_name = 'password/password_reset_email.html'
+    subject_template_name = 'password/password_reset_subject.html'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('home')
