@@ -1,26 +1,20 @@
-ARG PYTHON_VERSION=3.10-slim-buster
+FROM python:3.10
 
-FROM python:${PYTHON_VERSION}
-
-ENV PYTHONDONTWRITEBYTECODE 1
+#means Python will not try to write .pyc files
+ENV PYTHONDONTWRIEBYTECODE 1
+#ensures our console output is not buffered by Docker 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir -p /code
+# install psycopg2 dependencies
+# RUN apt-get update \
+#     && apt-get install postgresql-dev gcc python3-dev musl-dev
 
-WORKDIR /code
-
-COPY requirements.txt /tmp/requirements.txt
-
-RUN set -ex && \
-    pip install --upgrade pip && \
-    pip install -r /tmp/requirements.txt && \
-    rm -rf /root/.cache/
-
-COPY . /code/
-
-RUN python manage.py collectstatic --noinput
+WORKDIR /app
+COPY . /app/
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
-# replace demo.wsgi with <project_name>.wsgi
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "demo.wsgi"]
+# runs the production server
+ENTRYPOINT ["python3"]
+CMD ["manage.py","runserver", "0.0.0.0:8000"]
