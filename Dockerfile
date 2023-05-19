@@ -1,26 +1,26 @@
-ARG PYTHON_VERSION=3.10-slim-buster
+FROM python:3.11-alpine
 
-FROM python:${PYTHON_VERSION}
+RUN mkdir /movieapp
+WORKDIR /movieapp
 
-ENV PYTHONDONTWRITEBYTECODE 1
+#set environment variable // is an environment variable used to prevent Python from writing bytecode (.pyc) files to disk.
+ENV PYTHONDONTWRITEBYCODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir -p /code
+#install pyscopg2 dependencies
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev linux-headers
 
-WORKDIR /code
+#install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
 
-COPY requirements.txt /tmp/requirements.txt
+COPY . /movieapp/
 
-RUN set -ex && \
-    pip install --upgrade pip && \
-    pip install -r /tmp/requirements.txt && \
-    rm -rf /root/.cache/
-
-COPY . /code/
-
-RUN python manage.py collectstatic --noinput
+ENV API_KEY=$API_KEY
 
 EXPOSE 8000
 
-# replace demo.wsgi with <project_name>.wsgi
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "demo.wsgi"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
+
