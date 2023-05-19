@@ -1,6 +1,7 @@
 FROM python:3.11-alpine
 
 RUN mkdir /movieapp
+
 WORKDIR /movieapp
 
 #set environment variable // is an environment variable used to prevent Python from writing bytecode (.pyc) files to disk.
