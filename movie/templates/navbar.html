@@ -31,6 +31,12 @@
       
       <!-- Left links -->
     </div>
+
+    <form method="post" action="{% url 'search_movie' %}">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="Enter a movie name">
+        <input type="submit" class="btn btn-secondary" value="Search">
+      </form>
     <!-- Collapsible wrapper -->
     <!-- Right elements -->
     <div class="d-flex align-items-center">
