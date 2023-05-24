@@ -135,14 +135,16 @@ h1{
     <div class="poster__contents">
         <p style="color: transparent;">hahaha</p>
         <h1 class="poster_title">{{poster.title}}</h1>
+        <h6 style="margin-left: 2rem;">Release Date: {{poster.release_date}}</h6>
+        <h6 style="margin-left: 2rem;">Ratings: {{poster.vote_average}}</h6>
         <a href="/play/ {{poster.id}}">
             <button class="banner__button btn btn-danger" type="button" style="margin-left: 2rem;">
                 <i class="fa-solid fa-play"></i>
                     Play Trailer
             </button>
         </a>
-        <h4 style="margin-left: 1rem;">Overview</h4>
-        <h5 style="margin-left: 1rem; margin-bottom: 1rem;">{{poster.overview}}</h5>
+        <!-- <h4 style="margin-left: 1rem;">Overview</h4>
+        <h5 style="margin-left: 1rem; margin-bottom: 1rem;">{{poster.overview}}</h5> -->
         <!-- <h1 class="poster_description">
             <h4>Overview</h4>
             {{poster.overview}}
