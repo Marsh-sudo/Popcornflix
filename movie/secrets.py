@@ -41,3 +41,7 @@ def get_trending():
 def get_video(movie_id):
     response = requests.get(f"https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={API_KEY}")
     return response.json()
+
+def search_movie(movie_name):
+    response = requests.get(f"https://api.themoviedb.org/3/search/movie?query={movie_name}&api_key{API_KEY}")
+    return response.json()
