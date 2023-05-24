@@ -1,6 +1,8 @@
 import email
 import random
 import requests
+import os
+from dotenv import load_dotenv
 from django.shortcuts import render,redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -209,3 +211,27 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('home')
+    
+def search_movies_api(query):
+    api_key = os.getenv('API_KEY')
+    base_url = "https://api.themoviedb.org/3/search/movie"
+    params = {
+        "api_key": api_key,
+        "query": query
+    }
+    response = requests.get(base_url, params=params)
+    if response.status_code == 200:
+        results = response.json()["results"]
+        return results
+    else:
+        print("Error occurred while searching for movies.")
+        return []
+    
+
+def search_movies(request):
+    if request.method == 'POST':
+        query = request.POST.get('query')
+        results = search_movies_api(query)
+        return render(request, 'results.html', {'results': results})
+    return render(request, 'home.html')
+

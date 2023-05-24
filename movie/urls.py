@@ -17,6 +17,7 @@ urlpatterns = [
     path("Updateprofile",views.profile_update,name="Updateprofile"),
     path('login/', CustomLoginView.as_view(redirect_authenticated_user=True, template_name='login.html',
                                            authentication_form=LoginForm), name='login'),
+    path('search',views.search_movies,name="search_movie"),
    
    
     
